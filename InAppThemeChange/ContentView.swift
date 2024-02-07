@@ -8,17 +8,33 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject private var settings: ThemeSettings
+    @State private var showSheet = false
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+            List {
+                Section("外观") {
+                    Button {
+                        showSheet = true
+                    } label: {
+                        Text("更改主题")
+                    }
+                }
+            }
+            .navigationTitle("设置")
         }
-        .padding()
+        .sheet(isPresented: $showSheet, content: {
+            ThemeChangeView()
+                .presentationBackground(.clear)
+                .presentationDetents([.height(400)])
+        })
+        .preferredColorScheme(settings.applyedTheme)
+
     }
 }
 
 #Preview {
     ContentView()
+        .environmentObject(ThemeSettings())
 }

@@ -9,9 +9,16 @@ import SwiftUI
 
 @main
 struct InAppThemeChangeApp: App {
+    @StateObject private var settings = ThemeSettings()
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .preferredColorScheme(settings.applyedTheme)
+                .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification), perform: { _ in
+                    settings.setApplyedTheme()
+                })
         }
+        .environmentObject(settings)
     }
 }
